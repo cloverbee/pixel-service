@@ -1,0 +1,197 @@
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+gradle-app.setting
+.gradletasknamecache
+
+### Spring Boot ###
+*.log
+*.gz
+spring-shell.log
+
+### Maven (in case someone uses it) ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Eclipse ###
+.classpath
+.project
+.settings/
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+
+### VS Code ###
+.vscode/
+*.code-workspace
+.history/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### Windows ###
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+### Linux ###
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+### Docker ###
+# Ignore docker volumes data
+local-dev/volumes/
+docker-compose.override.yml
+
+### Database ###
+*.db
+*.sqlite
+*.sqlite3
+
+### Logs ###
+*.log
+logs/
+log/
+
+### Environment Variables ###
+.env
+.env.local
+.env.*.local
+*.env
+
+### Secrets ###
+secrets/
+*.key
+*.pem
+*.p12
+*.jks
+*.keystore
+
+### Test Coverage ###
+coverage/
+.nyc_output/
+*.lcov
+jacoco.xml
+.coverage
+
+### Generated Code ###
+# Immutables annotation processor generates code
+**/generated/
+**/generated-sources/
+**/generated-test-sources/
+
+### Temporary Files ###
+*.tmp
+*.temp
+*.cache
+.cache/
+
+### Application Specific ###
+# Local development overrides
+application-local.yml
+application-local.properties
+
+# Bot scripts temporary data
+bot-script/*.log
+bot-script/data/
+
+# Frontend (if added later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+dist/
+.next/
+.nuxt/
+
+### Backup Files ###
+*.bak
+*.backup
+*.old
+*~
+
+### Package Files ###
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+### Keep Important Files ###
+!.gitignore
+!.gitattributes
+!gradle/wrapper/gradle-wrapper.jar
+!PIXELWAR_SPEC.md
