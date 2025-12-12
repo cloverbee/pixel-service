@@ -1,6 +1,8 @@
 package com.multiverse.pixel.controller;
 
 import com.multiverse.pixel.dto.PixelEvent;
+import com.multiverse.pixel.entity.GameState;
+import com.multiverse.pixel.service.GameService;
 import com.multiverse.pixel.service.PixelEventProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +21,13 @@ public class PixelController {
     private static final Logger log = LoggerFactory.getLogger(PixelController.class);
     private final PixelEventProducer producer;
     private final BoardRepository boardRepository;
+    private final GameService gameService;
 
     // Update constructor
-    public PixelController(PixelEventProducer producer, BoardRepository boardRepository) {
+    public PixelController(PixelEventProducer producer, BoardRepository boardRepository, GameService gameService) {
         this.producer = producer;
         this.boardRepository = boardRepository;
+        this.gameService = gameService;
     }
 
     // Add new endpoint
@@ -37,7 +41,15 @@ public class PixelController {
     public ResponseEntity<String> paintPixel(@RequestBody PixelEvent event) {
         log.info("🎨 Received POST /api/pixels: x={}, y={}, color={}, userId={}",
                 event.getX(), event.getY(), event.getColor(), event.getUserId());
-        
+
+        // Check game state first
+        GameState gameState = gameService.getGameState();
+        if (!gameState.isActive()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Game is not active. Current state: " + gameState.getState());
+        }
+
+
         // Validate input
         if (event.getX() < 0 || event.getX() >= 50) {
             return ResponseEntity.badRequest().body("X must be between 0 and 49");
