@@ -4,7 +4,7 @@ import com.multiverse.pixel.entity.GameState;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.TimeUnit;
 
 @Service
 public class GameService {
@@ -45,7 +45,7 @@ public class GameService {
 
         long now = System.currentTimeMillis() / 1000;
         state.setStartTime(now);
-        state.setEndTime(now + (durationMinutes * 60));
+        state.setEndTime(now + (durationMinutes * 60L));
         state.setDurationSeconds(durationMinutes * 60);
 
         redisTemplate.opsForValue().set(GAME_STATE_KEY, state);
