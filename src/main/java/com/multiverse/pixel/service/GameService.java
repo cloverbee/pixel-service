@@ -3,6 +3,7 @@ package com.multiverse.pixel.service;
 import com.multiverse.pixel.entity.GameState;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import com.multiverse.pixel.repository.BoardRepository;
 
 //import java.util.concurrent.TimeUnit;
 
@@ -11,9 +12,11 @@ public class GameService {
 
     private static final String GAME_STATE_KEY = "GAME_STATE";
     private final RedisTemplate<String, Object> redisTemplate;
+    private final BoardRepository boardRepository;
 
-    public GameService(RedisTemplate<String, Object> redisTemplate) {
+    public GameService(RedisTemplate<String, Object> redisTemplate, BoardRepository boardRepository) {
         this.redisTemplate = redisTemplate;
+        this.boardRepository = boardRepository;
     }
 
     public GameState getGameState() {
@@ -61,5 +64,11 @@ public class GameService {
         GameState state = new GameState();
         state.setState(GameState.State.WAITING);
         redisTemplate.opsForValue().set(GAME_STATE_KEY, state);
+
+
+
+        // Optionally clear board on reset too, but definitely on start
+        boardRepository.clearBoard();
+        // scoreService.clearScores();
     }
 }
