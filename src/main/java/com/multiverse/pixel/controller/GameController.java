@@ -2,6 +2,8 @@ package com.multiverse.pixel.controller;
 
 import com.multiverse.pixel.entity.GameState;
 import com.multiverse.pixel.service.GameService;
+import com.multiverse.pixel.service.TeamService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +15,11 @@ import java.util.Map;
 public class GameController {
 
     private final GameService gameService;
+    private final TeamService teamService;
 
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, TeamService teamService) {
         this.gameService = gameService;
+        this.teamService = teamService;
     }
 
     @GetMapping("/status")
@@ -48,4 +52,17 @@ public class GameController {
         gameService.resetGame();
         return ResponseEntity.ok("Game reset to WAITING");
     }
+
+    @PostMapping("/results")
+    public ResponseEntity<Map<String, Object>> GameResults() {
+        GameState state = gameService.getGameState();
+        if (state.getState() != GameState.State.FINISHED){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "Game must be finished to view results"));
+        }
+
+        return ResponseEntity
+                .ok(teamService.calculateResults());
+    }
+
 }
