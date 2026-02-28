@@ -2,8 +2,11 @@ package com.multiverse.pixel.controller;
 
 import com.multiverse.pixel.dto.PixelEvent;
 import com.multiverse.pixel.entity.GameState;
+import com.multiverse.pixel.entity.PixelHistoryEntity;
+import com.multiverse.pixel.repository.PixelHistoryRepository;
 import com.multiverse.pixel.service.GameService;
 import com.multiverse.pixel.service.PixelEventProducer;
+import com.multiverse.pixel.service.ScoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.multiverse.pixel.repository.BoardRepository;
+
+import java.util.List;
 import java.util.Map;
 
 import com.multiverse.pixel.service.RateLimiterService;
@@ -27,14 +32,19 @@ public class PixelController {
     private final BoardRepository boardRepository;
     private final GameService gameService;// Add field
     private final RateLimiterService rateLimiterService;
+    private final PixelHistoryRepository historyRepository;
+    private final ScoreService scoreService;
 
 
     // Update constructor
-    public PixelController(PixelEventProducer producer, BoardRepository boardRepository, GameService gameService, RateLimiterService rateLimiterService) {
+    public PixelController(PixelEventProducer producer, BoardRepository boardRepository, GameService gameService, RateLimiterService rateLimiterService,
+                           PixelHistoryRepository historyRepository, ScoreService scoreService) {
         this.producer = producer;
         this.boardRepository = boardRepository;
         this.gameService = gameService;
         this.rateLimiterService = rateLimiterService;
+        this.historyRepository  =  historyRepository;
+        this.scoreService = scoreService;
     }
 
     // Add new endpoint
@@ -92,6 +102,20 @@ public class PixelController {
                 String.valueOf(rateLimiterService.getRemaining(event.getUserId())));
         // Return 202 Accepted (request received, will be processed asynchronously)
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Pixel event accepted in pixel controller");
+    }
+
+    // Add endpoint
+    @GetMapping("/history")
+    public ResponseEntity<List<PixelHistoryEntity>> getHistory() {
+        List<PixelHistoryEntity> history = historyRepository.findAll();
+        return ResponseEntity.ok(history);
+    }
+
+    // Add dynamodb test endpoint
+    @GetMapping("/scores")
+    public ResponseEntity<List<Map<String, Object>>> getLeaderboard() {
+        List<Map<String, Object>> leaderboard = scoreService.getLeaderboard(10);
+        return ResponseEntity.ok(leaderboard);
     }
 }
 

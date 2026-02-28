@@ -20,6 +20,11 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.boot:spring-boot-starter-data-cassandra")
+    // dynamodb
+    implementation(platform("software.amazon.awssdk:bom:2.29.15"))
+    implementation("software.amazon.awssdk:dynamodb")
+    implementation("software.amazon.awssdk:dynamodb-enhanced")
 }
 
 tasks.withType<Test> {

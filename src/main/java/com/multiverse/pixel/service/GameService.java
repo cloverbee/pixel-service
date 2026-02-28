@@ -13,10 +13,12 @@ public class GameService {
     private static final String GAME_STATE_KEY = "GAME_STATE";
     private final RedisTemplate<String, Object> redisTemplate;
     private final BoardRepository boardRepository;
+    private final ScoreService scoreService;
 
-    public GameService(RedisTemplate<String, Object> redisTemplate, BoardRepository boardRepository) {
+    public GameService(RedisTemplate<String, Object> redisTemplate, BoardRepository boardRepository, ScoreService scoreService) {
         this.redisTemplate = redisTemplate;
         this.boardRepository = boardRepository;
+        this.scoreService = scoreService;
     }
 
     public GameState getGameState() {
@@ -27,10 +29,10 @@ public class GameService {
         }
 
         // Auto-transition to FINISHED if time expired
-//        if (state.isActive() && state.getRemainingSeconds() <= 0) {
-//            state.setState(GameState.State.FINISHED);
-//            redisTemplate.opsForValue().set(GAME_STATE_KEY, state);
-//        }
+        if (state.isActive() && state.getRemainingSeconds() <= 0) {
+            state.setState(GameState.State.FINISHED);
+            redisTemplate.opsForValue().set(GAME_STATE_KEY, state);
+        }
 
         if (state.getState() == GameState.State.ACTIVE
                 && state.getEndTime() != null
@@ -69,6 +71,7 @@ public class GameService {
 
         // Optionally clear board on reset too, but definitely on start
         boardRepository.clearBoard();
-        // scoreService.clearScores();
+        //scoreService.clearScores();
+        scoreService.resetBotScores();
     }
 }

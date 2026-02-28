@@ -9,22 +9,26 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Service
 public class TeamService {
+    private static final Logger log = LoggerFactory.getLogger(TeamService.class);
 
     private static final String TEAMS_KEY = "TEAMS";
     private final RedisTemplate<String, Object> redisTemplate;
     private final BoardRepository boardRepository;
-    //private final ScoreService scoreService;
+    private final ScoreService scoreService;
 
     public TeamService(RedisTemplate<String, Object> redisTemplate,
-                       BoardRepository boardRepository
-            //,
-                       //ScoreService scoreService
+                       BoardRepository boardRepository,
+                       ScoreService scoreService
     ) {
         this.redisTemplate = redisTemplate;
         this.boardRepository = boardRepository;
-        //this.scoreService = scoreService;
+        this.scoreService = scoreService;
     }
 
     public void registerTeam(Team team) {
@@ -47,7 +51,7 @@ public class TeamService {
      */
     public Map<String, Object> calculateResults() {
         Map<Object, Object> board = boardRepository.getBoard();
-        //List<Map<String, Object>> leaderboard = scoreService.getLeaderboard(100);
+        List<Map<String, Object>> leaderboard = scoreService.getLeaderboard(100);
 
         // Count pixels by color
         Map<String, Integer> colorCounts = new HashMap<>();
@@ -71,20 +75,27 @@ public class TeamService {
             Team team = teamsByColor.get(color);
             if (team != null) {
                 // Find total paints from leaderboard
-//                long totalPaints = leaderboard.stream()
-//                        .filter(s -> s.get("userId").equals(team.getTeamId()))
-//                        .findFirst()
-//                        .map(s -> (Long) s.get("score"))
-//                        .orElse(0L);
+                long totalPaints = leaderboard.stream()
+                        .filter(s -> s.get("userId").equals(team.getTeamId()))
+                        .findFirst()
+                        .map(s -> (Long) s.get("score"))
+                        .orElse(0L);
 
                 results.add(Map.of(
                         "teamId", team.getTeamId(),
                         "teamName", team.getTeamName(),
                         "color", color,
-                        "territoryPixels", pixelCount
-                        //,
-                        //"totalPaints", totalPaints
+                        "territoryPixels", pixelCount,
+                        "totalPaints", totalPaints
                 ));
+
+                int rank = 1;
+                for (var r : results) {
+                    int territoryPixels = (int) r.get("territoryPixels");
+                    int totalPaints1     = (int) r.get("totalPaints");
+
+                    log.info("{} ) territory={}, paints={}", rank++, territoryPixels, totalPaints1);
+                }
             }
         }
 

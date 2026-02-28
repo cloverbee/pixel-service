@@ -13,10 +13,22 @@ spring:
       properties:
         spring.json.trusted.packages: "com.multiverse.pixel"
         spring.json.value.default.type: com.multiverse.pixel.dto.PixelEvent  # ← ADD THIS: Tell deserializer the target class
+  cassandra:
+    keyspace-name: pixelwar
+    contact-points: localhost
+    port: 9042
+    local-datacenter: datacenter1
+    schema-action: none
+
   data:
     redis:
       host: localhost
       port: 6379
+
+aws:
+  dynamodb:
+    endpoint: http://localhost:4566
+    region: us-east-1
 
 server:
   port: 8080
